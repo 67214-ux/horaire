@@ -18,6 +18,12 @@
       color: #222;
     }
 
+    .course-room {
+  font-size: 0.85em;
+  margin-top: 3px;
+  opacity: 0.8;
+}
+
     h1 {
       margin-top: 0;
       text-align: center;
@@ -2565,6 +2571,7 @@ END:VCALENDAR
 
 `;
 
+<script>
 
 /* ============================================================
    PAUSES FIXES
@@ -2725,7 +2732,8 @@ function parseICSDate(value) {
   }
 
 
-  const date = new Date(value);
+  const date =
+    new Date(value);
 
   return isNaN(date.getTime())
     ? null
@@ -2797,7 +2805,8 @@ function formatDate(date) {
 function getDateKey(date) {
 
   const parts =
-    brusselsDatePartsFormatter.formatToParts(date);
+    brusselsDatePartsFormatter
+      .formatToParts(date);
 
   let year = "";
   let month = "";
@@ -2869,30 +2878,17 @@ function unfoldICS(text) {
 }
 
 
-function getICSProperty(line, property) {
-
-  const regex =
-    new RegExp(
-      "^" +
-      property +
-      "(?:;[^:]* )?:(.*)$",
-      "i"
-    );
-
-  const match =
-    line.match(regex);
-
-  return match
-    ? match[1].trim()
-    : null;
-}
-
-
 /*
- * Version plus robuste pour les propriétés ICS
- * avec paramètres :
+ * Lecture robuste d'une propriété ICS.
  *
- * DTSTART;TZID=Europe/Brussels:...
+ * Fonctionne avec :
+ *
+ * SUMMARY:Mathématiques
+ *
+ * LOCATION:005
+ *
+ * DTSTART;TZID=Europe/Brussels:20260922T081500
+ *
  */
 
 function getICSPropertyValue(line, property) {
@@ -2905,14 +2901,20 @@ function getICSPropertyValue(line, property) {
   }
 
   const propertyPart =
-    line.substring(0, colonIndex);
+    line.substring(
+      0,
+      colonIndex
+    );
 
   const propertyName =
     propertyPart
       .split(";")[0]
       .toUpperCase();
 
-  if (propertyName !== property.toUpperCase()) {
+  if (
+    propertyName !==
+    property.toUpperCase()
+  ) {
     return null;
   }
 
@@ -2921,6 +2923,10 @@ function getICSPropertyValue(line, property) {
     .trim();
 }
 
+
+/*
+ * Décode les caractères spéciaux ICS.
+ */
 
 function unescapeICS(value) {
 
@@ -2968,7 +2974,8 @@ function parseICS(text) {
     return [];
   }
 
-  text = unfoldICS(text);
+  text =
+    unfoldICS(text);
 
   const lines =
     text.split("\n");
@@ -2984,9 +2991,9 @@ function parseICS(text) {
       line.trim();
 
 
-    /*
-     * Début événement
-     */
+    /* --------------------------------------------------------
+       DÉBUT ÉVÉNEMENT
+       -------------------------------------------------------- */
 
     if (
       cleanLine.toUpperCase() ===
@@ -2998,6 +3005,12 @@ function parseICS(text) {
         summary: "",
 
         description: "",
+
+        /*
+         * La salle sera récupérée
+         * automatiquement depuis LOCATION.
+         */
+
         location: "",
 
         start: null,
@@ -3010,9 +3023,9 @@ function parseICS(text) {
     }
 
 
-    /*
-     * Fin événement
-     */
+    /* --------------------------------------------------------
+       FIN ÉVÉNEMENT
+       -------------------------------------------------------- */
 
     if (
       cleanLine.toUpperCase() ===
@@ -3050,9 +3063,9 @@ function parseICS(text) {
     }
 
 
-    /*
-     * SUMMARY
-     */
+    /* --------------------------------------------------------
+       SUMMARY
+       -------------------------------------------------------- */
 
     const summary =
       getICSPropertyValue(
@@ -3069,9 +3082,9 @@ function parseICS(text) {
     }
 
 
-    /*
-     * DESCRIPTION
-     */
+    /* --------------------------------------------------------
+       DESCRIPTION
+       -------------------------------------------------------- */
 
     const description =
       getICSPropertyValue(
@@ -3088,9 +3101,28 @@ function parseICS(text) {
     }
 
 
-    /*
-     * DTSTART
-     */
+    /* --------------------------------------------------------
+       LOCATION
+       -------------------------------------------------------- */
+
+    const location =
+      getICSPropertyValue(
+        cleanLine,
+        "LOCATION"
+      );
+
+    if (location !== null) {
+
+      currentEvent.location =
+        unescapeICS(location);
+
+      continue;
+    }
+
+
+    /* --------------------------------------------------------
+       DTSTART
+       -------------------------------------------------------- */
 
     const dtstart =
       getICSPropertyValue(
@@ -3107,9 +3139,9 @@ function parseICS(text) {
     }
 
 
-    /*
-     * DTEND
-     */
+    /* --------------------------------------------------------
+       DTEND
+       -------------------------------------------------------- */
 
     const dtend =
       getICSPropertyValue(
@@ -3227,6 +3259,7 @@ function getTimeRows(dayEvents) {
   for (const pause of BREAKS) {
 
     times.add(pause.start);
+
     times.add(pause.end);
 
   }
@@ -3254,7 +3287,9 @@ function getTimeRows(dayEvents) {
 
 
   return Array.from(times)
-    .sort((a, b) => a - b);
+    .sort(
+      (a, b) => a - b
+    );
 
 }
 
@@ -3277,7 +3312,6 @@ function getEventsAtTime(
 
       const eventEnd =
         getMinutes(event.end);
-
 
       return (
         eventStart < end &&
@@ -3329,6 +3363,10 @@ function createCourseElement(event) {
     "course";
 
 
+  /* ----------------------------------------------------------
+     NOM DU COURS
+     ---------------------------------------------------------- */
+
   const name =
     document.createElement("div");
 
@@ -3339,6 +3377,48 @@ function createCourseElement(event) {
     event.summary ||
     "Cours sans nom";
 
+  div.appendChild(name);
+
+
+  /* ----------------------------------------------------------
+     SALLE
+     ---------------------------------------------------------- */
+
+  /*
+   * Si l'ICS contient :
+   *
+   * LOCATION:005
+   *
+   * on affiche :
+   *
+   * Salle 005
+   *
+   * Si LOCATION est vide, rien n'est affiché.
+   */
+
+  if (
+    event.location &&
+    event.location.trim()
+  ) {
+
+    const room =
+      document.createElement("div");
+
+    room.className =
+      "course-room";
+
+    room.textContent =
+      "Salle " +
+      event.location.trim();
+
+    div.appendChild(room);
+
+  }
+
+
+  /* ----------------------------------------------------------
+     HEURE
+     ---------------------------------------------------------- */
 
   const time =
     document.createElement("div");
@@ -3349,10 +3429,8 @@ function createCourseElement(event) {
   time.textContent =
     `${formatTime(event.start)} – ${formatTime(event.end)}`;
 
-
-  div.appendChild(name);
-
   div.appendChild(time);
+
 
   return div;
 }
@@ -3374,9 +3452,9 @@ function renderDay(
     "day";
 
 
-  /*
-   * Titre
-   */
+  /* ----------------------------------------------------------
+     TITRE
+     ---------------------------------------------------------- */
 
   const title =
     document.createElement("h2");
@@ -3389,9 +3467,9 @@ function renderDay(
   wrapper.appendChild(title);
 
 
-  /*
-   * Événements du jour
-   */
+  /* ----------------------------------------------------------
+     ÉVÉNEMENTS DU JOUR
+     ---------------------------------------------------------- */
 
   const dayEvents =
     allClasses.map(
@@ -3405,9 +3483,9 @@ function renderDay(
     );
 
 
-  /*
-   * Aucun événement
-   */
+  /* ----------------------------------------------------------
+     AUCUN ÉVÉNEMENT
+     ---------------------------------------------------------- */
 
   const hasEvents =
     dayEvents.some(
@@ -3427,23 +3505,25 @@ function renderDay(
     noData.textContent =
       "Aucun cours ce jour.";
 
-    wrapper.appendChild(noData);
+    wrapper.appendChild(
+      noData
+    );
 
     return wrapper;
   }
 
 
-  /*
-   * Créneaux
-   */
+  /* ----------------------------------------------------------
+     CRÉNEAUX
+     ---------------------------------------------------------- */
 
   const times =
     getTimeRows(dayEvents);
 
 
-  /*
-   * TABLE
-   */
+  /* ----------------------------------------------------------
+     TABLE
+     ---------------------------------------------------------- */
 
   const table =
     document.createElement("table");
@@ -3452,9 +3532,9 @@ function renderDay(
     "schedule";
 
 
-  /*
-   * THEAD
-   */
+  /* ----------------------------------------------------------
+     THEAD
+     ---------------------------------------------------------- */
 
   const thead =
     document.createElement("thead");
@@ -3463,9 +3543,9 @@ function renderDay(
     document.createElement("tr");
 
 
-  /*
-   * Colonne horaire
-   */
+  /* ----------------------------------------------------------
+     COLONNE HORAIRE
+     ---------------------------------------------------------- */
 
   const timeHeader =
     document.createElement("th");
@@ -3481,9 +3561,9 @@ function renderDay(
   );
 
 
-  /*
-   * Colonnes classes
-   */
+  /* ----------------------------------------------------------
+     COLONNES CLASSES
+     ---------------------------------------------------------- */
 
   for (
     const className
@@ -3500,6 +3580,7 @@ function renderDay(
       `Classe ${className}`;
 
     headerRow.appendChild(th);
+
   }
 
 
@@ -3512,17 +3593,17 @@ function renderDay(
   );
 
 
-  /*
-   * TBODY
-   */
+  /* ----------------------------------------------------------
+     TBODY
+     ---------------------------------------------------------- */
 
   const tbody =
     document.createElement("tbody");
 
 
-  /*
-   * Chaque intervalle
-   */
+  /* ----------------------------------------------------------
+     CHAQUE INTERVALLE
+     ---------------------------------------------------------- */
 
   for (
     let i = 0;
@@ -3542,9 +3623,9 @@ function renderDay(
     }
 
 
-    /*
-     * Vérifier pause
-     */
+    /* --------------------------------------------------------
+       VÉRIFIER PAUSE
+       -------------------------------------------------------- */
 
     const pause =
       getBreakForSlot(
@@ -3557,9 +3638,9 @@ function renderDay(
       document.createElement("tr");
 
 
-    /*
-     * Horaire
-     */
+    /* --------------------------------------------------------
+       HORAIRE
+       -------------------------------------------------------- */
 
     const timeCell =
       document.createElement("td");
@@ -3575,9 +3656,9 @@ function renderDay(
     );
 
 
-    /*
-     * Pause
-     */
+    /* --------------------------------------------------------
+       PAUSE
+       -------------------------------------------------------- */
 
     if (pause) {
 
@@ -3604,9 +3685,9 @@ function renderDay(
     }
 
 
-    /*
-     * Une colonne par classe
-     */
+    /* --------------------------------------------------------
+       UNE COLONNE PAR CLASSE
+       -------------------------------------------------------- */
 
     for (
       let classIndex = 0;
@@ -3626,6 +3707,10 @@ function renderDay(
         );
 
 
+      /* ------------------------------------------------------
+         AUCUN COURS
+         ------------------------------------------------------ */
+
       if (events.length === 0) {
 
         const empty =
@@ -3641,7 +3726,14 @@ function renderDay(
           empty
         );
 
-      } else {
+      }
+
+
+      /* ------------------------------------------------------
+         COURS
+         ------------------------------------------------------ */
+
+      else {
 
         for (
           const event
@@ -3731,9 +3823,9 @@ function renderAllDays(
     );
 
 
-  /*
-   * Aucun cours
-   */
+  /* ----------------------------------------------------------
+     AUCUN COURS
+     ---------------------------------------------------------- */
 
   if (days.length === 0) {
 
@@ -3757,9 +3849,9 @@ function renderAllDays(
   }
 
 
-  /*
-   * Afficher chaque jour
-   */
+  /* ----------------------------------------------------------
+     AFFICHER CHAQUE JOUR
+     ---------------------------------------------------------- */
 
   for (
     const day
@@ -3802,9 +3894,9 @@ document
 
       try {
 
-        /*
-         * Lire directement les 3 textes ICS
-         */
+        /* ----------------------------------------------------
+           LIRE LES 3 TEXTES ICS
+           ---------------------------------------------------- */
 
         const events2B =
           parseICS(ICS_2B);
@@ -3816,9 +3908,9 @@ document
           parseICS(ICS_2C);
 
 
-        /*
-         * Tableau final
-         */
+        /* ----------------------------------------------------
+           TABLEAU FINAL
+           ---------------------------------------------------- */
 
         const allClasses = [
 
@@ -3831,9 +3923,9 @@ document
         ];
 
 
-        /*
-         * Afficher
-         */
+        /* ----------------------------------------------------
+           AFFICHER
+           ---------------------------------------------------- */
 
         renderAllDays(
           allClasses
@@ -3857,8 +3949,6 @@ document
     }
   );
 
-
 </script>
-
 </body>
 </html>

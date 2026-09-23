@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,27 +7,12 @@
   <title>Comparateur d'horaires</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
-      padding: 30px;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Arial, sans-serif;
       background: #f4f6f8;
-      color: #222;
-    }
-
-    .course-room {
-  font-size: 0.85em;
-  margin-top: 3px;
-  opacity: 0.8;
-}
-
-    h1 {
-      margin-top: 0;
-      text-align: center;
+      margin: 0;
+      padding: 20px;
+      color: #111827;
     }
 
     .container {
@@ -36,24 +22,29 @@
 
     .panel {
       background: white;
-      border-radius: 12px;
       padding: 25px;
+      border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
       margin-bottom: 25px;
+    }
+
+    h1 {
+      margin-top: 0;
+      text-align: center;
     }
 
     .classes-info {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 15px;
-      margin-bottom: 20px;
+      margin: 20px 0;
     }
 
     .class-box {
-      padding: 15px;
-      border-radius: 10px;
       background: #f8fafc;
-      border: 1px solid #ddd;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 15px;
       text-align: center;
       font-weight: bold;
     }
@@ -61,13 +52,12 @@
     button {
       display: block;
       margin: 20px auto 0;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 8px;
       background: #2563eb;
       color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
       font-size: 16px;
-      font-weight: bold;
       cursor: pointer;
     }
 
@@ -77,111 +67,135 @@
 
     #error {
       margin-top: 15px;
-      padding: 12px;
-      border-radius: 8px;
-      background: #fee2e2;
-      color: #991b1b;
-      display: none;
+      color: #dc2626;
+      text-align: center;
     }
 
     .day {
       background: white;
       border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 30px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      overflow-x: auto;
+      margin-bottom: 25px;
+      overflow: hidden;
     }
 
     .day h2 {
-      margin-top: 0;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #eee;
+      margin: 0;
+      padding: 15px 20px;
+      background: #1f2937;
+      color: white;
+      font-size: 20px;
     }
 
     .schedule {
+      display: grid;
+      grid-template-columns: 90px repeat(3, 1fr);
       width: 100%;
-      border-collapse: collapse;
-      min-width: 850px;
-    }
-
-    .schedule th,
-    .schedule td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      vertical-align: top;
-    }
-
-    .schedule th {
-      background: #1f2937;
-      color: white;
-      text-align: center;
     }
 
     .time-column {
-      width: 130px;
-      text-align: center;
-      white-space: nowrap;
+      background: #f9fafb;
+      border-right: 1px solid #e5e7eb;
+    }
+
+    .time-cell {
+      min-height: 75px;
+      padding: 10px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 13px;
       font-weight: bold;
+      color: #4b5563;
+      text-align: center;
     }
 
     .class-column {
-      width: calc((100% - 130px) / 3);
+      border-right: 1px solid #e5e7eb;
+      min-width: 0;
+    }
+
+    .class-header {
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-weight: bold;
       text-align: center;
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .slot {
+      min-height: 75px;
+      padding: 6px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #e5e7eb;
     }
 
     .course {
-      background: #eef4ff;
-      border-left: 4px solid #2563eb;
-      border-radius: 6px;
+      background: #dbeafe;
+      border: 1px solid #93c5fd;
+      border-radius: 7px;
       padding: 8px;
-      margin: 3px 0;
-      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
     }
 
     .course-name {
+      font-size: 14px;
       font-weight: bold;
-      margin-bottom: 4px;
+      color: #1e3a8a;
+    }
+
+    .course-room {
+      font-size: 12px;
+      color: #374151;
+      margin-top: 3px;
+      margin-bottom: 3px;
+      font-weight: 600;
     }
 
     .course-time {
-      font-size: 12px;
-      color: #555;
+      font-size: 11px;
+      color: #4b5563;
+      margin-top: 4px;
     }
 
     .pause {
       background: #f3f4f6;
       color: #6b7280;
-      text-align: center !important;
+      text-align: center;
       font-style: italic;
-      font-weight: bold;
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
     }
 
     .empty {
-      color: #aaa;
-      text-align: center;
-      font-style: italic;
+      background: #fafafa;
     }
 
     .no-data {
       padding: 30px;
       text-align: center;
-      color: #666;
+      color: #6b7280;
     }
 
     .loading {
       text-align: center;
-      padding: 20px;
-      color: #555;
+      padding: 30px;
+      color: #6b7280;
     }
 
     @media (max-width: 900px) {
-      body {
-        padding: 15px;
+      .schedule {
+        grid-template-columns: 70px repeat(3, minmax(180px, 1fr));
+        overflow-x: auto;
       }
 
       .classes-info {
         grid-template-columns: 1fr;
+      }
+
+      .day {
+        overflow-x: auto;
       }
     }
   </style>
@@ -196,17 +210,9 @@
     <h1>Comparateur d'horaires</h1>
 
     <div class="classes-info">
-      <div class="class-box">
-        Classe 2B
-      </div>
-
-      <div class="class-box">
-        Classe 2A
-      </div>
-
-      <div class="class-box">
-        Classe 2C
-      </div>
+      <div class="class-box">Classe 2B</div>
+      <div class="class-box">Classe 2A</div>
+      <div class="class-box">Classe 2C</div>
     </div>
 
     <button id="showButton">
@@ -224,23 +230,11 @@
 
 <script>
 
-/* ============================================================
-   CONFIGURATION
-   ============================================================ */
+/* =========================================================
+   TES CALENDRIERS ICS
+   =========================================================
 
-const CLASS_NAMES = [
-  "2B",
-  "2A",
-  "2C"
-];
-
-
-/* ============================================================
-   TES DONNÉES ICS
-   ============================================================
-
-   COLLE LE CONTENU COMPLET DE TON FICHIER ICS
-   ENTRE LES BACKTICKS.
+   Garde ici tes vrais contenus ICS complets.
 
    Exemple :
 
@@ -249,12 +243,10 @@ const CLASS_NAMES = [
    ...
    END:VCALENDAR
    `;
-   ============================================================ */
 
+   Même chose pour ICS_2A et ICS_2C.
+*/
 
-/* =========================
-   HORAIRE 2B
-   ========================= */
 
 const ICS_2B = `
 BEGIN:VCALENDAR
@@ -1015,13 +1007,8 @@ DESCRIPTION:AS2 - Groupe B2 — Hyperplanning IESSID 2026-2027
 END:VEVENT
 END:VCALENDAR
 
-
 `;
 
-
-/* =========================
-   HORAIRE 2A
-   ========================= */
 
 const ICS_2A = `
 BEGIN:VCALENDAR
@@ -1795,10 +1782,6 @@ END:VCALENDAR
 `;
 
 
-/* =========================
-   HORAIRE 2C
-   ========================= */
-
 const ICS_2C = `
 BEGIN:VCALENDAR
 VERSION:2.0
@@ -2568,38 +2551,32 @@ DESCRIPTION:AS2 - Groupe C2 — Hyperplanning IESSID 2026-2027
 END:VEVENT
 END:VCALENDAR
 
-
 `;
 
-<script>
 
-/* ============================================================
-   PAUSES FIXES
-   ============================================================ */
+/* =========================================================
+   CONFIGURATION
+   ========================================================= */
 
-const BREAKS = [
-
-  {
-    start: 10 * 60,
-    end: 10 * 60 + 15,
-    label: "Pause"
-  },
-
-  {
-    start: 12 * 60 + 15,
-    end: 13 * 60 + 15,
-    label: "Pause déjeuner"
-  }
-
+const CLASS_NAMES = [
+  "2B",
+  "2A",
+  "2C"
 ];
 
 
-/* ============================================================
-   ÉVÉNEMENTS À IGNORER
-   ============================================================ */
+const CALENDARS = {
+  "2B": ICS_2B,
+  "2A": ICS_2A,
+  "2C": ICS_2C
+};
+
+
+/*
+   Événements à ignorer.
+*/
 
 const IGNORE_KEYWORDS = [
-
   "pause",
   "break",
   "récréation",
@@ -2611,18 +2588,34 @@ const IGNORE_KEYWORDS = [
   "dejeuner",
   "congé",
   "conge",
-
   "séance d'informations",
   "seance d'informations",
   "séance d’information",
   "seance d’information"
-
 ];
 
 
-/* ============================================================
-   OUTILS DATE / HEURE
-   ============================================================ */
+/*
+   Pauses fixes.
+*/
+
+const BREAKS = [
+  {
+    start: 10 * 60,
+    end: 10 * 60 + 15,
+    label: "Pause"
+  },
+  {
+    start: 12 * 60 + 15,
+    end: 13 * 60 + 15,
+    label: "Pause déjeuner"
+  }
+];
+
+
+/* =========================================================
+   DATES
+   ========================================================= */
 
 function parseICSDate(value) {
 
@@ -2632,118 +2625,109 @@ function parseICSDate(value) {
 
   value = value.trim();
 
-
   /*
-   * Format UTC :
-   *
-   * 20260922T081500Z
-   */
+    UTC :
+    20260923T080000Z
+  */
 
-  if (/^\d{8}T\d{6}Z$/.test(value)) {
+  let match = value.match(
+    /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/
+  );
 
-    const year =
-      Number(value.substring(0, 4));
+  if (match) {
 
-    const month =
-      Number(value.substring(4, 6)) - 1;
-
-    const day =
-      Number(value.substring(6, 8));
-
-    const hour =
-      Number(value.substring(9, 11));
-
-    const minute =
-      Number(value.substring(11, 13));
-
-    const second =
-      Number(value.substring(13, 15));
-
-    return new Date(
-      Date.UTC(
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second
-      )
-    );
-  }
-
-
-  /*
-   * Format sans Z
-   */
-
-  if (/^\d{8}T\d{6}$/.test(value)) {
-
-    const year =
-      Number(value.substring(0, 4));
-
-    const month =
-      Number(value.substring(4, 6)) - 1;
-
-    const day =
-      Number(value.substring(6, 8));
-
-    const hour =
-      Number(value.substring(9, 11));
-
-    const minute =
-      Number(value.substring(11, 13));
-
-    const second =
-      Number(value.substring(13, 15));
-
-    return new Date(
+    const [
+      ,
       year,
       month,
       day,
       hour,
       minute,
       second
+    ] = match;
+
+    return new Date(
+      Date.UTC(
+        Number(year),
+        Number(month) - 1,
+        Number(day),
+        Number(hour),
+        Number(minute),
+        Number(second)
+      )
     );
   }
 
 
   /*
-   * Format date uniquement
-   *
-   * 20260922
-   */
+    Date/heure locale :
+    20260923T080000
+  */
 
-  if (/^\d{8}$/.test(value)) {
+  match = value.match(
+    /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})$/
+  );
 
-    const year =
-      Number(value.substring(0, 4));
+  if (match) {
 
-    const month =
-      Number(value.substring(4, 6)) - 1;
-
-    const day =
-      Number(value.substring(6, 8));
-
-    return new Date(
+    const [
+      ,
       year,
       month,
-      day
+      day,
+      hour,
+      minute,
+      second
+    ] = match;
+
+    return new Date(
+      Number(year),
+      Number(month) - 1,
+      Number(day),
+      Number(hour),
+      Number(minute),
+      Number(second)
     );
   }
 
 
-  const date =
-    new Date(value);
+  /*
+    Date seule :
+    20260923
+  */
 
-  return isNaN(date.getTime())
+  match = value.match(
+    /^(\d{4})(\d{2})(\d{2})$/
+  );
+
+  if (match) {
+
+    const [
+      ,
+      year,
+      month,
+      day
+    ] = match;
+
+    return new Date(
+      Number(year),
+      Number(month) - 1,
+      Number(day)
+    );
+  }
+
+
+  const fallback = new Date(value);
+
+  return isNaN(fallback.getTime())
     ? null
-    : date;
+    : fallback;
 }
 
 
-/* ============================================================
+/* =========================================================
    FORMATAGE BRUXELLES
-   ============================================================ */
+   ========================================================= */
 
 const brusselsFormatter =
   new Intl.DateTimeFormat(
@@ -2784,59 +2768,48 @@ const brusselsDatePartsFormatter =
 
 function formatTime(date) {
 
-  return brusselsFormatter.format(date);
+  if (!date) {
+    return "";
+  }
 
+  return brusselsFormatter.format(date);
 }
 
 
 function formatDate(date) {
 
-  const text =
+  if (!date) {
+    return "";
+  }
+
+  const result =
     brusselsDateFormatter.format(date);
 
-  return (
-    text.charAt(0).toUpperCase() +
-    text.slice(1)
-  );
-
+  return result.charAt(0).toUpperCase()
+    + result.slice(1);
 }
 
 
 function getDateKey(date) {
 
-  const parts =
-    brusselsDatePartsFormatter
-      .formatToParts(date);
-
-  let year = "";
-  let month = "";
-  let day = "";
-
-  for (const part of parts) {
-
-    if (part.type === "year") {
-      year = part.value;
-    }
-
-    if (part.type === "month") {
-      month = part.value;
-    }
-
-    if (part.type === "day") {
-      day = part.value;
-    }
-
+  if (!date) {
+    return "";
   }
 
-  return `${year}-${month}-${day}`;
+  return brusselsDatePartsFormatter
+    .format(date);
 }
 
 
 function getMinutes(date) {
 
+  if (!date) {
+    return 0;
+  }
+
   const parts =
     new Intl.DateTimeFormat(
-      "fr-BE",
+      "en-GB",
       {
         timeZone: "Europe/Brussels",
         hour: "2-digit",
@@ -2857,16 +2830,15 @@ function getMinutes(date) {
     if (part.type === "minute") {
       minute = Number(part.value);
     }
-
   }
 
   return hour * 60 + minute;
 }
 
 
-/* ============================================================
-   OUTILS ICS
-   ============================================================ */
+/* =========================================================
+   ICS UNFOLDING
+   ========================================================= */
 
 function unfoldICS(text) {
 
@@ -2874,22 +2846,23 @@ function unfoldICS(text) {
     .replace(/\r\n/g, "\n")
     .replace(/\r/g, "\n")
     .replace(/\n[ \t]/g, "");
-
 }
 
 
-/*
- * Lecture robuste d'une propriété ICS.
- *
- * Fonctionne avec :
- *
- * SUMMARY:Mathématiques
- *
- * LOCATION:005
- *
- * DTSTART;TZID=Europe/Brussels:20260922T081500
- *
- */
+/* =========================================================
+   ICS PROPERTY READER
+   =========================================================
+
+   Fonctionne avec :
+
+   LOCATION:003
+
+   LOCATION:005
+
+   LOCATION;LANGUAGE=fr:003
+
+   DTSTART;TZID=Europe/Brussels:...
+*/
 
 function getICSPropertyValue(line, property) {
 
@@ -2924,15 +2897,11 @@ function getICSPropertyValue(line, property) {
 }
 
 
-/*
- * Décode les caractères spéciaux ICS.
- */
+/* =========================================================
+   ICS ESCAPING
+   ========================================================= */
 
 function unescapeICS(value) {
-
-  if (!value) {
-    return "";
-  }
 
   return value
     .replace(/\\n/gi, "\n")
@@ -2942,16 +2911,16 @@ function unescapeICS(value) {
 }
 
 
-/* ============================================================
+/* =========================================================
    IGNORER CERTAINS ÉVÉNEMENTS
-   ============================================================ */
+   ========================================================= */
 
 function shouldIgnoreEvent(event) {
 
   const text = (
-    event.summary +
+    (event.summary || "") +
     " " +
-    event.description
+    (event.description || "")
   ).toLowerCase();
 
   return IGNORE_KEYWORDS.some(
@@ -2960,96 +2929,53 @@ function shouldIgnoreEvent(event) {
         keyword.toLowerCase()
       )
   );
-
 }
 
 
-/* ============================================================
-   LECTURE ICS
-   ============================================================ */
+/* =========================================================
+   PARSER ICS
+   ========================================================= */
 
 function parseICS(text) {
 
-  if (!text || !text.trim()) {
-    return [];
-  }
-
-  text =
-    unfoldICS(text);
-
   const lines =
-    text.split("\n");
+    unfoldICS(text).split("\n");
 
   const events = [];
 
   let currentEvent = null;
 
 
-  for (const line of lines) {
+  for (const rawLine of lines) {
 
-    const cleanLine =
-      line.trim();
+    const line =
+      rawLine.trim();
 
 
-    /* --------------------------------------------------------
-       DÉBUT ÉVÉNEMENT
-       -------------------------------------------------------- */
-
-    if (
-      cleanLine.toUpperCase() ===
-      "BEGIN:VEVENT"
-    ) {
+    if (line === "BEGIN:VEVENT") {
 
       currentEvent = {
-
         summary: "",
-
         description: "",
-
-        /*
-         * La salle sera récupérée
-         * automatiquement depuis LOCATION.
-         */
-
         location: "",
-
         start: null,
-
         end: null
-
       };
 
       continue;
     }
 
 
-    /* --------------------------------------------------------
-       FIN ÉVÉNEMENT
-       -------------------------------------------------------- */
-
-    if (
-      cleanLine.toUpperCase() ===
-      "END:VEVENT"
-    ) {
+    if (line === "END:VEVENT") {
 
       if (
         currentEvent &&
         currentEvent.start &&
-        currentEvent.end
+        currentEvent.end &&
+        !shouldIgnoreEvent(currentEvent)
       ) {
 
-        if (
-          !shouldIgnoreEvent(
-            currentEvent
-          )
-        ) {
-
-          events.push(
-            currentEvent
-          );
-
-        }
-
+        events.push(currentEvent);
       }
 
       currentEvent = null;
@@ -3063,13 +2989,13 @@ function parseICS(text) {
     }
 
 
-    /* --------------------------------------------------------
-       SUMMARY
-       -------------------------------------------------------- */
+    /*
+      SUMMARY
+    */
 
     const summary =
       getICSPropertyValue(
-        cleanLine,
+        line,
         "SUMMARY"
       );
 
@@ -3082,13 +3008,13 @@ function parseICS(text) {
     }
 
 
-    /* --------------------------------------------------------
-       DESCRIPTION
-       -------------------------------------------------------- */
+    /*
+      DESCRIPTION
+    */
 
     const description =
       getICSPropertyValue(
-        cleanLine,
+        line,
         "DESCRIPTION"
       );
 
@@ -3101,13 +3027,16 @@ function parseICS(text) {
     }
 
 
-    /* --------------------------------------------------------
-       LOCATION
-       -------------------------------------------------------- */
+    /*
+      LOCATION
+      ================================
+      C'est ici que la salle est récupérée
+      automatiquement depuis l'ICS.
+    */
 
     const location =
       getICSPropertyValue(
-        cleanLine,
+        line,
         "LOCATION"
       );
 
@@ -3120,43 +3049,42 @@ function parseICS(text) {
     }
 
 
-    /* --------------------------------------------------------
-       DTSTART
-       -------------------------------------------------------- */
+    /*
+      DTSTART
+    */
 
-    const dtstart =
+    const start =
       getICSPropertyValue(
-        cleanLine,
+        line,
         "DTSTART"
       );
 
-    if (dtstart !== null) {
+    if (start !== null) {
 
       currentEvent.start =
-        parseICSDate(dtstart);
+        parseICSDate(start);
 
       continue;
     }
 
 
-    /* --------------------------------------------------------
-       DTEND
-       -------------------------------------------------------- */
+    /*
+      DTEND
+    */
 
-    const dtend =
+    const end =
       getICSPropertyValue(
-        cleanLine,
+        line,
         "DTEND"
       );
 
-    if (dtend !== null) {
+    if (end !== null) {
 
       currentEvent.end =
-        parseICSDate(dtend);
+        parseICSDate(end);
 
       continue;
     }
-
   }
 
 
@@ -3164,195 +3092,186 @@ function parseICS(text) {
 }
 
 
-/* ============================================================
+/* =========================================================
    GROUPER PAR JOUR
-   ============================================================ */
+   ========================================================= */
 
 function groupEventsByDay(events) {
 
-  const result = {};
+  const grouped = {};
 
   for (const event of events) {
 
     const key =
       getDateKey(event.start);
 
-    if (!result[key]) {
-      result[key] = [];
+    if (!key) {
+      continue;
     }
 
-    result[key].push(event);
+    if (!grouped[key]) {
+      grouped[key] = [];
+    }
+
+    grouped[key].push(event);
   }
 
-  return result;
+
+  for (const key of Object.keys(grouped)) {
+
+    grouped[key].sort(
+      (a, b) =>
+        a.start - b.start
+    );
+  }
+
+
+  return grouped;
 }
 
 
-/* ============================================================
-   RÉCUPÉRER LES JOURS
-   ============================================================ */
+/* =========================================================
+   TOUS LES JOURS
+   ========================================================= */
 
-function getAllDays(allClasses) {
+function getAllDays(groupedCalendars) {
 
-  const days =
-    new Set();
+  const days = new Set();
 
-  for (const events of allClasses) {
+  for (
+    const className of CLASS_NAMES
+  ) {
 
-    for (const event of events) {
+    const grouped =
+      groupedCalendars[className];
 
-      days.add(
-        getDateKey(event.start)
-      );
+    for (
+      const day of Object.keys(grouped)
+    ) {
 
+      days.add(day);
     }
-
   }
 
   return Array.from(days).sort();
 }
 
 
-/* ============================================================
-   CONVERSION DATE
-   ============================================================ */
+/* =========================================================
+   DATE DEPUIS UNE CLÉ
+   ========================================================= */
 
 function dateFromKey(key) {
 
-  const [
-    year,
-    month,
-    day
-  ] =
-    key
-      .split("-")
-      .map(Number);
+  const parts =
+    key.split("-");
+
+  if (parts.length !== 3) {
+    return null;
+  }
+
+  const year =
+    Number(parts[0]);
+
+  const month =
+    Number(parts[1]);
+
+  const day =
+    Number(parts[2]);
 
   return new Date(
-    Date.UTC(
-      year,
-      month - 1,
-      day,
-      12,
-      0,
-      0
-    )
+    year,
+    month - 1,
+    day
   );
-
 }
 
 
-/* ============================================================
-   CRÉATION DES LIGNES HORAIRES
-   ============================================================ */
+/* =========================================================
+   CRÉER LES LIGNES HORAIRES
+   ========================================================= */
 
 function getTimeRows(dayEvents) {
 
-  const times =
-    new Set();
+  const times = new Set();
+
+  for (
+    const events of Object.values(dayEvents)
+  ) {
+
+    for (const event of events) {
+
+      const start =
+        getMinutes(event.start);
+
+      const end =
+        getMinutes(event.end);
+
+      times.add(start);
+      times.add(end);
+    }
+  }
 
 
   /*
-   * Ajouter les pauses
-   */
+    Ajouter les heures importantes
+    des pauses.
+  */
 
   for (const pause of BREAKS) {
 
     times.add(pause.start);
-
     times.add(pause.end);
-
-  }
-
-
-  /*
-   * Ajouter les débuts/fins
-   */
-
-  for (const events of dayEvents) {
-
-    for (const event of events) {
-
-      times.add(
-        getMinutes(event.start)
-      );
-
-      times.add(
-        getMinutes(event.end)
-      );
-
-    }
-
   }
 
 
   return Array.from(times)
-    .sort(
-      (a, b) => a - b
-    );
-
+    .sort((a, b) => a - b);
 }
 
 
-/* ============================================================
-   TROUVER LES COURS
-   ============================================================ */
+/* =========================================================
+   ÉVÉNEMENTS À UNE HEURE
+   ========================================================= */
 
 function getEventsAtTime(
   events,
-  start,
-  end
+  minute
 ) {
 
-  return events.filter(
-    event => {
+  return events.filter(event => {
 
-      const eventStart =
-        getMinutes(event.start);
+    const start =
+      getMinutes(event.start);
 
-      const eventEnd =
-        getMinutes(event.end);
+    const end =
+      getMinutes(event.end);
 
-      return (
-        eventStart < end &&
-        eventEnd > start
-      );
-
-    }
-  );
-
+    return (
+      start <= minute &&
+      end > minute
+    );
+  });
 }
 
 
-/* ============================================================
+/* =========================================================
    PAUSE
-   ============================================================ */
+   ========================================================= */
 
-function getBreakForSlot(
-  start,
-  end
-) {
+function getBreakForSlot(minute) {
 
-  for (const pause of BREAKS) {
-
-    if (
-      start >= pause.start &&
-      end <= pause.end
-    ) {
-
-      return pause;
-
-    }
-
-  }
-
-  return null;
+  return BREAKS.find(
+    pause =>
+      minute >= pause.start &&
+      minute < pause.end
+  );
 }
 
 
-/* ============================================================
-   AFFICHER UN COURS
-   ============================================================ */
+/* =========================================================
+   CRÉER UN COURS
+   ========================================================= */
 
 function createCourseElement(event) {
 
@@ -3363,9 +3282,9 @@ function createCourseElement(event) {
     "course";
 
 
-  /* ----------------------------------------------------------
-     NOM DU COURS
-     ---------------------------------------------------------- */
+  /*
+    Nom du cours
+  */
 
   const name =
     document.createElement("div");
@@ -3380,21 +3299,13 @@ function createCourseElement(event) {
   div.appendChild(name);
 
 
-  /* ----------------------------------------------------------
-     SALLE
-     ---------------------------------------------------------- */
-
   /*
-   * Si l'ICS contient :
-   *
-   * LOCATION:005
-   *
-   * on affiche :
-   *
-   * Salle 005
-   *
-   * Si LOCATION est vide, rien n'est affiché.
-   */
+    Salle
+    ================================
+
+    Si LOCATION est vide,
+    rien n'est affiché.
+  */
 
   if (
     event.location &&
@@ -3412,13 +3323,12 @@ function createCourseElement(event) {
       event.location.trim();
 
     div.appendChild(room);
-
   }
 
 
-  /* ----------------------------------------------------------
-     HEURE
-     ---------------------------------------------------------- */
+  /*
+    Heure
+  */
 
   const time =
     document.createElement("div");
@@ -3436,358 +3346,284 @@ function createCourseElement(event) {
 }
 
 
-/* ============================================================
-   AFFICHER UNE JOURNÉE
-   ============================================================ */
+/* =========================================================
+   RENDRE UN JOUR
+   ========================================================= */
 
 function renderDay(
   dateKey,
-  allClasses
+  groupedCalendars
 ) {
 
-  const wrapper =
+  const dayDiv =
     document.createElement("div");
 
-  wrapper.className =
+  dayDiv.className =
     "day";
 
-
-  /* ----------------------------------------------------------
-     TITRE
-     ---------------------------------------------------------- */
 
   const title =
     document.createElement("h2");
 
+  const date =
+    dateFromKey(dateKey);
+
   title.textContent =
-    formatDate(
-      dateFromKey(dateKey)
-    );
+    formatDate(date);
 
-  wrapper.appendChild(title);
+  dayDiv.appendChild(title);
 
 
-  /* ----------------------------------------------------------
-     ÉVÉNEMENTS DU JOUR
-     ---------------------------------------------------------- */
+  const schedule =
+    document.createElement("div");
 
-  const dayEvents =
-    allClasses.map(
-      events =>
-        events.filter(
-          event =>
-            getDateKey(
-              event.start
-            ) === dateKey
-        )
-    );
-
-
-  /* ----------------------------------------------------------
-     AUCUN ÉVÉNEMENT
-     ---------------------------------------------------------- */
-
-  const hasEvents =
-    dayEvents.some(
-      events =>
-        events.length > 0
-    );
-
-
-  if (!hasEvents) {
-
-    const noData =
-      document.createElement("div");
-
-    noData.className =
-      "no-data";
-
-    noData.textContent =
-      "Aucun cours ce jour.";
-
-    wrapper.appendChild(
-      noData
-    );
-
-    return wrapper;
-  }
-
-
-  /* ----------------------------------------------------------
-     CRÉNEAUX
-     ---------------------------------------------------------- */
-
-  const times =
-    getTimeRows(dayEvents);
-
-
-  /* ----------------------------------------------------------
-     TABLE
-     ---------------------------------------------------------- */
-
-  const table =
-    document.createElement("table");
-
-  table.className =
+  schedule.className =
     "schedule";
 
 
-  /* ----------------------------------------------------------
-     THEAD
-     ---------------------------------------------------------- */
+  /*
+    Colonne des heures
+  */
 
-  const thead =
-    document.createElement("thead");
+  const timeColumn =
+    document.createElement("div");
 
-  const headerRow =
-    document.createElement("tr");
-
-
-  /* ----------------------------------------------------------
-     COLONNE HORAIRE
-     ---------------------------------------------------------- */
-
-  const timeHeader =
-    document.createElement("th");
-
-  timeHeader.className =
+  timeColumn.className =
     "time-column";
 
-  timeHeader.textContent =
-    "Horaire";
 
-  headerRow.appendChild(
-    timeHeader
+  const emptyHeader =
+    document.createElement("div");
+
+  emptyHeader.className =
+    "time-cell";
+
+  emptyHeader.style.height =
+    "43px";
+
+  timeColumn.appendChild(
+    emptyHeader
   );
 
 
-  /* ----------------------------------------------------------
-     COLONNES CLASSES
-     ---------------------------------------------------------- */
+  /*
+    Récupérer les événements du jour
+  */
+
+  const dayEvents = {};
+
 
   for (
-    const className
-    of CLASS_NAMES
+    const className of CLASS_NAMES
   ) {
 
-    const th =
-      document.createElement("th");
-
-    th.className =
-      "class-column";
-
-    th.textContent =
-      `Classe ${className}`;
-
-    headerRow.appendChild(th);
-
+    dayEvents[className] =
+      groupedCalendars[className][dateKey] ||
+      [];
   }
 
 
-  thead.appendChild(
-    headerRow
-  );
-
-  table.appendChild(
-    thead
-  );
+  const timeRows =
+    getTimeRows(dayEvents);
 
 
-  /* ----------------------------------------------------------
-     TBODY
-     ---------------------------------------------------------- */
-
-  const tbody =
-    document.createElement("tbody");
-
-
-  /* ----------------------------------------------------------
-     CHAQUE INTERVALLE
-     ---------------------------------------------------------- */
+  /*
+    Afficher les heures
+  */
 
   for (
-    let i = 0;
-    i < times.length - 1;
-    i++
+    const minute of timeRows
   ) {
-
-    const start =
-      times[i];
-
-    const end =
-      times[i + 1];
-
-
-    if (start === end) {
-      continue;
-    }
-
-
-    /* --------------------------------------------------------
-       VÉRIFIER PAUSE
-       -------------------------------------------------------- */
-
-    const pause =
-      getBreakForSlot(
-        start,
-        end
-      );
-
-
-    const row =
-      document.createElement("tr");
-
-
-    /* --------------------------------------------------------
-       HORAIRE
-       -------------------------------------------------------- */
 
     const timeCell =
-      document.createElement("td");
+      document.createElement("div");
 
     timeCell.className =
-      "time-column";
+      "time-cell";
 
     timeCell.textContent =
-      `${formatMinutes(start)} – ${formatMinutes(end)}`;
+      formatMinutes(minute);
 
-    row.appendChild(
+    timeColumn.appendChild(
       timeCell
     );
-
-
-    /* --------------------------------------------------------
-       PAUSE
-       -------------------------------------------------------- */
-
-    if (pause) {
-
-      const pauseCell =
-        document.createElement("td");
-
-      pauseCell.colSpan = 3;
-
-      pauseCell.className =
-        "pause";
-
-      pauseCell.textContent =
-        pause.label;
-
-      row.appendChild(
-        pauseCell
-      );
-
-      tbody.appendChild(
-        row
-      );
-
-      continue;
-    }
-
-
-    /* --------------------------------------------------------
-       UNE COLONNE PAR CLASSE
-       -------------------------------------------------------- */
-
-    for (
-      let classIndex = 0;
-      classIndex < 3;
-      classIndex++
-    ) {
-
-      const cell =
-        document.createElement("td");
-
-
-      const events =
-        getEventsAtTime(
-          dayEvents[classIndex],
-          start,
-          end
-        );
-
-
-      /* ------------------------------------------------------
-         AUCUN COURS
-         ------------------------------------------------------ */
-
-      if (events.length === 0) {
-
-        const empty =
-          document.createElement("div");
-
-        empty.className =
-          "empty";
-
-        empty.textContent =
-          "—";
-
-        cell.appendChild(
-          empty
-        );
-
-      }
-
-
-      /* ------------------------------------------------------
-         COURS
-         ------------------------------------------------------ */
-
-      else {
-
-        for (
-          const event
-          of events
-        ) {
-
-          cell.appendChild(
-            createCourseElement(
-              event
-            )
-          );
-
-        }
-
-      }
-
-
-      row.appendChild(
-        cell
-      );
-
-    }
-
-
-    tbody.appendChild(
-      row
-    );
-
   }
 
 
-  table.appendChild(
-    tbody
-  );
-
-  wrapper.appendChild(
-    table
+  schedule.appendChild(
+    timeColumn
   );
 
 
-  return wrapper;
+  /*
+    Colonnes des classes
+  */
+
+  for (
+    const className of CLASS_NAMES
+  ) {
+
+    const column =
+      document.createElement("div");
+
+    column.className =
+      "class-column";
+
+
+    /*
+      Header
+    */
+
+    const header =
+      document.createElement("div");
+
+    header.className =
+      "class-header";
+
+    header.textContent =
+      `Classe ${className}`;
+
+    column.appendChild(header);
+
+
+    /*
+      Slots
+    */
+
+    for (
+      const minute of timeRows
+    ) {
+
+      const slot =
+        document.createElement("div");
+
+      slot.className =
+        "slot";
+
+
+      /*
+        Pause
+      */
+
+      const breakInfo =
+        getBreakForSlot(minute);
+
+      if (breakInfo) {
+
+        /*
+          On n'affiche la pause
+          que dans la première colonne.
+        */
+
+        if (
+          className ===
+          CLASS_NAMES[0]
+        ) {
+
+          const pause =
+            document.createElement("div");
+
+          pause.className =
+            "pause";
+
+          pause.textContent =
+            breakInfo.label;
+
+          pause.style.height =
+            "100%";
+
+          pause.style.boxSizing =
+            "border-box";
+
+          pause.style.display =
+            "flex";
+
+          pause.style.alignItems =
+            "center";
+
+          pause.style.justifyContent =
+            "center";
+
+          pause.style.position =
+            "relative";
+
+          pause.style.zIndex =
+            "2";
+
+          pause.style.width =
+            "100%";
+
+          /*
+            La pause visuelle est
+            simplement affichée dans
+            chaque colonne.
+          */
+
+          slot.appendChild(pause);
+
+        } else {
+
+          slot.classList.add(
+            "empty"
+          );
+        }
+
+      } else {
+
+        const events =
+          getEventsAtTime(
+            dayEvents[className],
+            minute
+          );
+
+
+        if (events.length > 0) {
+
+          for (
+            const event of events
+          ) {
+
+            slot.appendChild(
+              createCourseElement(event)
+            );
+          }
+
+        } else {
+
+          slot.classList.add(
+            "empty"
+          );
+        }
+      }
+
+
+      column.appendChild(slot);
+    }
+
+
+    schedule.appendChild(
+      column
+    );
+  }
+
+
+  dayDiv.appendChild(
+    schedule
+  );
+
+
+  return dayDiv;
 }
 
 
-/* ============================================================
+/* =========================================================
    FORMAT MINUTES
-   ============================================================ */
+   ========================================================= */
 
 function formatMinutes(minutes) {
 
   const hour =
-    Math.floor(
-      minutes / 60
-    );
+    Math.floor(minutes / 60);
 
   const minute =
     minutes % 60;
@@ -3797,17 +3633,14 @@ function formatMinutes(minutes) {
     ":" +
     String(minute).padStart(2, "0")
   );
-
 }
 
 
-/* ============================================================
-   AFFICHER TOUS LES JOURS
-   ============================================================ */
+/* =========================================================
+   RENDRE TOUS LES JOURS
+   ========================================================= */
 
-function renderAllDays(
-  allClasses
-) {
+function renderAllDays() {
 
   const results =
     document.getElementById(
@@ -3817,138 +3650,101 @@ function renderAllDays(
   results.innerHTML = "";
 
 
+  const groupedCalendars = {};
+
+
+  /*
+    Parser les trois ICS
+  */
+
+  for (
+    const className of CLASS_NAMES
+  ) {
+
+    groupedCalendars[className] =
+      groupEventsByDay(
+        parseICS(
+          CALENDARS[className]
+        )
+      );
+  }
+
+
   const days =
     getAllDays(
-      allClasses
+      groupedCalendars
     );
 
 
-  /* ----------------------------------------------------------
-     AUCUN COURS
-     ---------------------------------------------------------- */
-
   if (days.length === 0) {
 
-    const panel =
+    const noData =
       document.createElement("div");
 
-    panel.className =
-      "panel";
+    noData.className =
+      "panel no-data";
 
-    panel.innerHTML = `
-      <div class="no-data">
-        Aucun cours trouvé dans les horaires ICS.
-      </div>
-    `;
+    noData.textContent =
+      "Aucun horaire trouvé.";
 
     results.appendChild(
-      panel
+      noData
     );
 
     return;
   }
 
 
-  /* ----------------------------------------------------------
-     AFFICHER CHAQUE JOUR
-     ---------------------------------------------------------- */
+  /*
+    Afficher chaque jour
+  */
 
-  for (
-    const day
-    of days
-  ) {
+  for (const day of days) {
 
     results.appendChild(
       renderDay(
         day,
-        allClasses
+        groupedCalendars
       )
     );
-
   }
-
 }
 
 
-/* ============================================================
-   AFFICHER LES HORAIRES
-   ============================================================ */
+/* =========================================================
+   BOUTON
+   ========================================================= */
 
 document
   .getElementById("showButton")
   .addEventListener(
     "click",
-    () => {
+    function () {
 
       const error =
         document.getElementById(
           "error"
         );
 
-      error.style.display =
-        "none";
-
-      error.textContent =
-        "";
-
+      error.textContent = "";
 
       try {
 
-        /* ----------------------------------------------------
-           LIRE LES 3 TEXTES ICS
-           ---------------------------------------------------- */
+        renderAllDays();
 
-        const events2B =
-          parseICS(ICS_2B);
-
-        const events2A =
-          parseICS(ICS_2A);
-
-        const events2C =
-          parseICS(ICS_2C);
-
-
-        /* ----------------------------------------------------
-           TABLEAU FINAL
-           ---------------------------------------------------- */
-
-        const allClasses = [
-
-          events2B,
-
-          events2A,
-
-          events2C
-
-        ];
-
-
-        /* ----------------------------------------------------
-           AFFICHER
-           ---------------------------------------------------- */
-
-        renderAllDays(
-          allClasses
-        );
-
-      }
-
-      catch (err) {
+      } catch (err) {
 
         console.error(err);
 
         error.textContent =
-          err.message ||
-          "Une erreur est survenue.";
-
-        error.style.display =
-          "block";
-
+          "Une erreur est survenue : " +
+          err.message;
       }
-
     }
   );
 
 </script>
+
 </body>
 </html>
+```
